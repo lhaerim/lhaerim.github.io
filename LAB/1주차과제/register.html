@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이해림</title>
+</head>
+
+<body>
+    <header>
+        <h1>동아리 가입 양식</h1>
+    </header>
+    <section>
+        <form>
+            <label for="name">이름</label>
+            <input type="text" id="rname" name="name"><br/>
+
+            <label for="major">학부/학과</label>
+            <input list="major">
+            <datalist id="major">
+            <option value="소프트웨어학부(첨단)"></option>
+            <option value="인공지능공학부"></option>
+            <option value="기초공학부"></option>
+            <option value="기계시스템학부"></option>
+            <option value="전자융합공학부"></option>
+            <option value="화공생명공학부"></option>
+        </datalist><br/>
+
+            <label for="grade">학년</label>
+            <input type="radio" id="1학년" name="my_grade" value="1학년">
+            <label for="1학년">1학년</label>
+            <input type="radio" id="2학년" name="my_grade" value="2학년">
+            <label for="2학년">2학년</label>
+            <input type="radio" id="3학년" name="my_grade" value="3학년">
+            <label for="3학년">3학년</label>
+            <input type="radio" id="4학년" name="my_grade" value="4학년">
+            <label for="4학년">4학년</label><br/>
+
+            <label for="num">학번</label>
+            <input type="text" id="num" name="num"><br/>
+
+            <label for="email">이메일</label>
+            <input type="email" id="email" name="email" placeholder="id@host"><br/>
+
+            <label for="phone">전화번호</label>
+            <input type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" placeholder="010-1234-5678"><br/>
+
+            <label for="join">가입동기</label>
+            <textarea name="join" id="join" cols="20" rows="2"></textarea><br/>
+
+            <input type="submit" value="가입하기"><input type="submit" value="취소하기">
+    </section>
+    </form>
+</body>
+
+</html>
