@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2313638 이해림</title>
+</head>
+
+<body>
+    <script>
+        function countdown(x, callback) {
+            let time = setInterval(function() {
+                console.clear();
+                document.body.innerHTML = x;
+
+                if (x === 0) {
+                    clearInterval(time);
+                    callback();
+                } else {
+                    x--;
+                }
+            }, 1000);
+        }
+
+        function End() {
+            document.body.innerHTML = "타이머 종료";
+        }
+
+
+        let x = parseInt(prompt("카운트다운할 숫자를 입력하세요"));
+        countdown(x, End);
+    </script>
+
+</body>
+
+</html>
