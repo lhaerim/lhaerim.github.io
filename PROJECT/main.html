@@ -12,12 +12,22 @@
         <h1>cineBuddy</h1>
         <nav><span>로그인</span> <span>회원가입</span></nav>
     </header>
-    <div id="content">
-        <section>
-            <article id="board"><a href="genre_list.html">취향맞는 cineBuddy 찾기</a></article>
-            <article id="board"><a href="distance_list.html">주변 cineBuddy 찾기</a></article>
-            <article id="board"><a href="score.html">영화 별점 보러가기</a></article>
-        </section>
+    <div class="container">
+        <div class="box">
+            <a href="genre_list.html">
+            </a>
+            <span>장르별 취향맞는 cineBuddy 찾기</span>
+        </div>
+        <div class="box">
+            <a href="distance_list.html">
+            </a>
+            <span>거리별 가까운 cineBuddy 찾기</span>
+        </div>
+        <div class="box">
+            <a href="score.html">
+            </a>
+            <span>영화 별점</span>
+        </div>
     </div>
     <footer>
         개발일자 2024-06-00 <a href="introduce.html">개발인 이해림</a>
@@ -39,7 +49,39 @@
             grid-gap: 1rem;
         }
         
-        footer {}
+        .container {
+            display: flex;
+            width: 100%;
+            padding: 4% 2%;
+            box-sizing: border-box;
+            height: 100vh;
+        }
+        
+        .box {
+            flex: 1;
+            overflow: hidden;
+            transition: 5s;
+            margin: 0 2%;
+            box-shadow: 0 20px 30px rgba(0, 0, 0, .1);
+            line-height: 0;
+        }
+        
+        .box>a {
+            font-size: 3px;
+            display: block;
+            text-align: center;
+            height: 10vh;
+            line-height: 2.6;
+        }
+        
+        .box>span {
+            font-size: 70px;
+            display: block;
+            text-align: center;
+            height: 10vh;
+            line-height: 2.6;
+            color: #800020;
+        }
     </style>
 
 
