@@ -4,11 +4,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>cineBuddy 거리 글쓰기</title>
+    <title>cineBuddy 장르 글쓰기</title>
 </head>
 
 <body>
+    <div class="board_wrap">
+        <div class="board_title">
+            <strong>거리별 게시판</strong>
+            <p>자신의 취향과 맞는 cineBuddy들을 탐색해보세요!</p>
+        </div>
+        <div class="board_write_wrap">
+            <div class="board_write">
+                <form id="postForm">
+                    <div class="title">
+                        <dl>
+                            <dt>글 제목</dt>
+                            <dd><input type="text" id="title" placeholder="제목 입력" required /></dd>
+                        </dl>
+                    </div>
+                    <div class="info">
+                        <dl>
+                            <dt>글쓴이</dt>
+                            <dd><input type="text" id="writer" placeholder="글쓴이 입력" required /></dd>
+                        </dl>
+                    </div>
+                    <div class="cont">
+                        <textarea id="content" placeholder="내용 입력" required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="bt_wrap">
+                <a href="distance_list.html" class="on">글등록</a>
+                <!--<a href="#">수정</a>-->
+            </div>
+        </div>
+        <script>
+            function submitForm() {
+                var genre = document.getElementById("genre").value;
+                var title = document.getElementById("title").value;
+                var writer = document.getElementById("writer").value;
+                var content = document.getElementById("content").value;
 
+        
+                    // 기존에 저장된 글 목록을 불러와서 추가
+                    var existingPosts = JSON.parse(localStorage.getItem("posts")) || [];
+                    var newPost = {
+                        id: existingPosts.length + 1,
+                        title: title,
+                        writer: writer,
+                        content: content,
+                        imageData: imageData
+                    };
+
+                    existingPosts.push(newPost);
+
+                    // localStorage에 저장
+                    localStorage.setItem("posts", JSON.stringify(existingPosts));
+
+                    // Redirect to the list page after submission
+                    window.location.href = "list.html";
+                };
+        </script>
+    </div>
 </body>
+
+<style>
+        * {
+        margin: 0;
+        padding: 0;
+    }
+
+    html {
+        font-size: 25px;
+    }
+
+    a{
+        text-decoration: none;
+        color: black;
+    }
+
+    .board_wrap {
+        width: auto;
+        margin: auto;
+    }
+
+    .board_title {
+        margin-bottom: 30px;
+    }
+
+    .board_title strong {
+        font-size: 2rem;
+    }
+
+    .board_title p {
+        margin-top: 5px;
+        font-size: 1rem;
+    }
+    .bt_wrap {
+        margin-top: 30px;
+        text-align: center;
+        font-size: 0;
+    }
+
+    .bt_wrap a {
+        display: inline-block;
+        min-width: 80px;
+        margin-left: 10px;
+        padding: 10px;
+        border: 1px solid black;
+        border-radius: 2px;
+        font-size: 1rem;
+    }
+
+    .bt_wrap a:first-child {
+        margin-left: 0;
+    }
+
+    .bt_wrap a.on {
+        background: #800020;
+    }
+
+    .board_list>div:list-child {
+        border-bottom: 1px solid #800020;
+    }
+    .board_write {
+        border-top: 2px solid #800020;
+    }
+    .board_write .genre, .board_write .title, .board_write .info {
+        padding: 15px;
+    }
+
+    .board_write .title {
+        border-top: 1px dashed #ddd;
+    }
+
+    .board_write .info {
+        font-size: 0;
+    }
+
+    .board_write .title dl {
+        font-size: 0;
+    }
+    
+    .board_write .info dl {
+        display: inline-block;
+        width: 50%;
+        vertical-align: midlle;
+    }
+
+    .board_write .title dt, 
+    .board_write .title dd, 
+    .board_write .info dt,
+    .board_write .info dd {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .board_write .title dd {
+        width: calc(100% -100px);
+    }
+
+    .board_write .title input[type="text"],
+    .board_write .info input[type="text"] {
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+    .board_write .cont textarea {
+        display: block;
+        width: 100%;
+        height: 300px;
+        padding: 10px;
+        margin-left: 10px;
+        box-sizing: auto;
+        border: 2px solid #800020;
+        resize: vertical;
+    }
+
+</style>
 
 </html>
