@@ -8,52 +8,34 @@
 <body>
     <header>
         <h1>마이페이지</h1>
-        <nav>
-            <span id="logout">로그아웃</span>
-        </nav>
     </header>
     <div class="container">
         <h2>회원 정보</h2>
-        <form id="updateForm">
-            <label for="username">이름:</label>
-            <input type="text" id="username" name="username" required><br>
-            <label for="email">이메일:</label>
-            <input type="email" id="email" name="email" required><br>
-            <button type="submit">정보 수정</button>
-        </form>
+        <p><strong>이름:</strong> <span id="username"></span></p>
+        <p><strong>이메일:</strong> <span id="email"></span></p>
     </div>
-    <footer>
-        개발일자 2024-06-00 <a href="introduce.html">개발인 이해림</a>
-    </footer>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             var user = getCookie("user");
             if (!user) {
-                alert("로그인이 필요합니다.");
-                window.location.href = "main.html";
+                displayNonMemberMessage(); // 비회원 메시지 표시
                 return;
             }
 
-            user = JSON.parse(user);
-            document.getElementById("username").value = user.username;
-            document.getElementById("email").value = user.email;
+            try {
+                user = JSON.parse(user);
+                displayMemberInfo(user); // 회원 정보 표시
+            } catch (error) {
+                console.error("Error parsing user information from cookie:", error);
+                displayNonMemberMessage(); // 비회원 메시지 표시
+            }
 
+            // 로그아웃 버튼 클릭 이벤트 처리
             document.getElementById("logout").onclick = function () {
                 deleteCookie("user");
                 window.location.href = "main.html";
             };
-
-            document.getElementById("updateForm").addEventListener("submit", function(event) {
-                event.preventDefault();
-                var username = document.getElementById("username").value;
-                var email = document.getElementById("email").value;
-
-                // 사용자 정보 업데이트 처리
-                setCookie("user", JSON.stringify({ username: username, email: email }));
-                alert("정보가 수정되었습니다.");
-                window.location.href = "main.html";
-            });
         });
 
         function getCookie(name) {
@@ -67,15 +49,26 @@
             return null;
         }
 
-        function setCookie(name, value) {
-            document.cookie = name + "=" + (value || "") + "; path=/";
-        }
-
         function deleteCookie(name) {
             document.cookie = name + '=; Max-Age=-99999999; path=/';
         }
+
+        function displayMemberInfo(user) {
+            document.getElementById("username").textContent = user.username;
+            document.getElementById("email").textContent = user.email;
+        }
+
+        function displayNonMemberMessage() {
+            var nonMemberInfoSection = document.getElementById("nonMemberInfo");
+            nonMemberInfoSection.style.display = "block";
+        }
     </script>
+    
 </body>
 </html>
+
+
+
+
 
 

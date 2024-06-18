@@ -1,105 +1,104 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>cineBuddy 거리 글쓰기</title>
     <style>
-        /* styles.css */
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-}
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
 
-.board_wrap {
-    width: 80%;
-    margin: auto;
-    padding: 20px;
-}
+        .board_wrap {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+        }
 
-.board_title {
-    margin-bottom: 30px;
-    text-align: center;
-}
+        .board_title {
+            margin-bottom: 30px;
+            text-align: center;
+        }
 
-.board_title strong {
-    font-size: 2rem;
-    color: #800020;
-}
+        .board_title strong {
+            font-size: 2rem;
+            color: #800020;
+        }
 
-.board_title p {
-    margin-top: 5px;
-    font-size: 1rem;
-    color: #333333;
-}
+        .board_title p {
+            margin-top: 5px;
+            font-size: 1rem;
+            color: #333333;
+        }
 
-.form_group {
-    margin-bottom: 20px;
-}
+        .form_group {
+            margin-bottom: 20px;
+        }
 
-.form_group label {
-    display: block;
-    margin-bottom: 5px;
-}
+        .form_group label {
+            display: block;
+            margin-bottom: 5px;
+        }
 
-.form_group input,
-.form_group textarea {
-    width: calc(100% - 20px);
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
-    resize: vertical;
-}
+        .form_group input,
+        .form_group textarea {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+            resize: vertical;
+        }
 
-.form_group textarea {
-    height: 200px;
-}
+        .form_group textarea {
+            height: 200px;
+        }
 
-.form_group input:focus,
-.form_group textarea:focus {
-    outline: none;
-    border-color: #800020;
-}
+        .form_group input:focus,
+        .form_group textarea:focus {
+            outline: none;
+            border-color: #800020;
+        }
 
-.bt_wrap {
-    text-align: center;
-    margin-top: 20px;
-}
+        .bt_wrap {
+            text-align: center;
+            margin-top: 20px;
+        }
 
-.bt_wrap button {
-    padding: 10px 20px;
-    font-size: 1rem;
-    background-color: #800020;
-    color: #ffffff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
+        .bt_wrap button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #800020;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
 
-.bt_wrap button:hover {
-    background-color: #5c0019;
-}
+        .bt_wrap button:hover {
+            background-color: #5c0019;
+        }
 
-#map {
+        #map {
             width: 100%;
             height: 350px;
             margin-bottom: 20px;
         }
+
         #clickLatlng {
             font-style: italic;
             margin-bottom: 10px;
         }
-
     </style>
 </head>
 
@@ -122,47 +121,42 @@ body {
                 <label for="postContent">내용</label>
                 <textarea id="postContent" required></textarea>
             </div>
-            <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7827fc4bdc7eb1bba6281130a2a3a99f"></script>
             <div id="map"></div>
-            <p>지도 위 본인의 위치를 표시해주세요!</p>
+            <p>지도 위 본인의 위치를 클릭해주세요!</p>
             <input type="hidden" id="latitude" name="latitude" value="">
             <input type="hidden" id="longitude" name="longitude" value="">
             <div class="bt_wrap">
-                <button type="button" onclick="submitForm()">글등록</button>
+                <button type="button" onclick="submitPost()">글등록</button>
             </div>
         </form>
     </div>
+    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=7827fc4bdc7eb1bba6281130a2a3a99f"></script>
     <script>
-                var mapContainer = document.getElementById('map'); // 지도를 표시할 div 
+        var mapContainer = document.getElementById('map'); // 지도를 표시할 div
         var mapOption = {
-            center: new kakao.maps.LatLng(37.5665, 126.9780), // 서울시청을 중심으로 초기화
-            level: 10 // 지도의 확대 레벨
+            center: new kakao.maps.LatLng(37.542360089442, 126.96121708264), // 지도의 중심좌표
+            level: 3 // 지도의 확대 레벨
         };
-
         var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
 
-        // 지도를 클릭한 위치에 마커를 표시하는 함수입니다
-        function placeMarker(position) {
-            var marker = new kakao.maps.Marker({
-                map: map,
-                position: position,
-            });
-
-            // 클릭한 위치의 위도와 경도를 hidden input에 설정합니다
-            document.getElementById('latitude').value = position.getLat();
-            document.getElementById('longitude').value = position.getLng();
-        }
+        // 지도를 클릭한 위치에 표출할 마커입니다
+        var marker = new kakao.maps.Marker({
+            position: map.getCenter()
+        });
+        marker.setMap(map);
 
         // 지도에 클릭 이벤트를 등록합니다
-        kakao.maps.event.addListener(map, 'click', function(mouseEvent) {        
-            var latlng = mouseEvent.latLng; 
-            
-            // 기존 마커를 모두 제거합니다
-            map.removeMarkers();
-            
-            // 클릭한 위치에 마커를 표시합니다
-            placeMarker(latlng);
+        kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
+            var latlng = mouseEvent.latLng;
+
+            // 클릭한 위치의 위도와 경도를 hidden input에 설정합니다
+            document.getElementById('latitude').value = latlng.getLat();
+            document.getElementById('longitude').value = latlng.getLng();
+
+            // 마커 위치를 클릭한 위치로 옮깁니다
+            marker.setPosition(latlng);
         });
+
         // 글 등록 버튼을 눌렀을 때 호출되는 함수입니다
         function submitPost() {
             var title = document.getElementById('postTitle').value;
@@ -170,6 +164,13 @@ body {
             var content = document.getElementById('postContent').value;
             var latitude = document.getElementById('latitude').value;
             var longitude = document.getElementById('longitude').value;
+
+            // 입력된 데이터를 확인합니다
+            console.log('제목:', title);
+            console.log('글쓴이:', writer);
+            console.log('내용:', content);
+            console.log('위도:', latitude);
+            console.log('경도:', longitude);
 
             // 여기서 서버로 데이터를 전송하거나 로컬 스토리지에 저장하는 등의 작업을 수행합니다
             var newPost = {
@@ -180,9 +181,25 @@ body {
                 longitude: longitude
             };
 
+            // 로컬 스토리지에 저장하는 함수 (임시 예시)
+            savePost(newPost);
+
+            // 저장 후 목록을 다시 불러와서 표시하는 함수 (임시 예시)
+            // displayPosts();
+
+            // 글 등록 후 distance_list.html 페이지로 이동합니다
             window.location.href = 'distance_list.html';
+        }
+
+        // 로컬 스토리지에 데이터를 저장하는 함수 (임시 예시)
+        function savePost(postData) {
+            var posts = JSON.parse(localStorage.getItem('distancePosts')) || [];
+            posts.push(postData);
+            localStorage.setItem('distancePosts', JSON.stringify(posts));
         }
     </script>
 </body>
 
 </html>
+
+

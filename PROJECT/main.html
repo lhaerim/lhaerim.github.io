@@ -12,7 +12,7 @@
         <h1>cineBuddy</h1>
         <nav>
             <span id="login">로그인</span>
-            <span id="mypage">마이페이지</span>
+            <a id="mypageLink" href="mypage.html">마이페이지</a>
         </nav>
     </header>
     <div class="container">
@@ -34,18 +34,21 @@
         document.addEventListener("DOMContentLoaded", function () {
             var user = getCookie("user");
             var loginLink = document.getElementById("login");
-            var mypageLink = document.getElementById("mypage");
+            var mypageLink = document.getElementById("mypageLink");
 
+
+            // 로그인 클릭 시 로그인 페이지로 이동
             loginLink.onclick = function () {
                 window.location.href = "login.html";
             };
 
+            // 마이페이지 클릭 시 회원 여부에 따라 처리
             mypageLink.onclick = function () {
-                if (user) {
-                    window.location.href = "mypage.html";
-                } else {
-                    alert("로그인이 필요합니다.");
+                if (!user) {
+                    alert("로그인이 필요합니다."); // 비회원인 경우 알림 표시
+                    window.location.href = "login.html"; // 로그인 페이지로 이동
                 }
+                // 회원인 경우 이미 설정된 href 속성으로 이동
             };
         });
 
@@ -59,7 +62,7 @@
             }
             return null;
         }
-    </script>
+        </script>
 
     <style>
         html {
@@ -102,6 +105,17 @@ nav span {
             margin-left: 10px;
             cursor: pointer;
 }
+
+nav span,
+        nav a {
+            display: inline-block;
+            padding: 10px;
+            cursor: pointer;
+            color: white;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+
 header nav span {
     margin: 0 1rem;
     cursor: pointer;

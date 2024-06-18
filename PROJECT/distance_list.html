@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
@@ -51,80 +51,64 @@
             display: inline-block;
             min-width: 80px;
             margin-left: 10px;
-            padding: 10px;
-            border: 1px solid black;
-            border-radius: 2px;
+            padding: 10px 20px; /* 버튼 크기와 패딩 수정 */
+            border: 1px solid #800020;
+            border-radius: 4px;
             font-size: 1rem;
             cursor: pointer;
+            background-color: #800020;
+            color: #ffffff;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .bt_wrap a:first-child {
             margin-left: 0;
         }
 
-        .bt_wrap a.on {
-            background: #800020;
-            color: white;
+        .bt_wrap a:hover {
+            background-color: #5c0019;
+            color: #ffffff;
+        }
+
+        .board_list_wrap {
+            border-top: 2px solid #800020;
+            border-bottom: 1px solid #ddd;
         }
 
         .board_list {
-            border-top: 2px solid #800020;
+            list-style: none;
         }
 
-        .list_header,
-        .post_item {
+        .board_item {
             display: flex;
-            border-bottom: 1px solid #800020;
+            justify-content: space-between;
+            align-items: center;
             padding: 10px 0;
+            border-bottom: 1px solid #ddd;
         }
 
-        .list_header>div,
-        .post_item>div {
-            flex: 1;
-            text-align: center;
+        .board_item .post_link {
+            font-size: 1.1rem;
+            color: #333;
         }
 
-        .post_item .title a {
-            color: #000;
+        .board_item .post_link:hover {
+            color: #800020;
         }
 
-        .post_item .title a:hover {
-            text-decoration: underline;
-        }
-
-        .bt_wrap a:hover {
-            background-color: #5c0019;
-        }
-
-        .bt_wrap a {
-            padding: 10px 20px;
-            font-size: 1rem;
+        .board_item button {
+            padding: 5px 10px;
+            font-size: 0.9rem;
             background-color: #800020;
-            color: #ffffff;
+            color: #fff;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             transition: background-color 0.3s;
         }
 
-        .post_item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #ccc;
-        }
-
-        .post_item .genre,
-        .post_item .writer,
-        .post_item .title {
-            flex: 1;
-            padding: 5px;
-        }
-
-        .post_item .delete_btn {
-            cursor: pointer;
-            color: red;
+        .board_item button:hover {
+            background-color: #5c0019;
         }
     </style>
 </head>
@@ -136,14 +120,9 @@
             <p>자신과 가까운 cineBuddy들을 탐색해보세요!</p>
         </div>
         <div class="board_list_wrap">
-            <div class="board_list">
-                <div class="list_header">
-                    <div class="writer">글쓴이</div>
-                    <div class="title">제목</div>
-                    <div class="actions">삭제</div>
-                </div>
-                <!-- 게시물 목록이 여기에 추가됩니다 -->
-            </div>
+            <ul class="board_list" id="postList">
+                <!-- 게시물 목록이 여기에 동적으로 생성됩니다 -->
+            </ul>
         </div>
         <div class="bt_wrap">
             <a href="distance_write.html" class="on">글쓰기</a>
@@ -151,44 +130,34 @@
     </div>
 
     <script>
-        // localStorage에서 저장된 거리 게시물 목록을 가져옴
-        var existingPosts = JSON.parse(localStorage.getItem("distancePosts")) || [];
+        document.addEventListener("DOMContentLoaded", function () {
+            renderPosts();
+        });
 
-        // 함수: 게시물 목록을 렌더링
         function renderPosts() {
-            var boardList = document.querySelector(".board_list");
-            var listHeader = `
-                <div class="list_header">
-                    <div class="writer">글쓴이</div>
-                    <div class="title">제목</div>
-                    <div class="actions">삭제</div>
-                </div>
-            `;
-            boardList.innerHTML = listHeader; // 기존 목록 초기화 및 헤더 유지
+            var posts = JSON.parse(localStorage.getItem('distancePosts')) || [];
+            var postList = document.getElementById('postList');
+            postList.innerHTML = '';
 
-            existingPosts.forEach(function (post, index) {
-                var postElement = document.createElement("div");
-                postElement.classList.add("post_item");
-                postElement.innerHTML = `
-                    <div class="writer">${post.writer}</div>
-                    <div class="title"><a href="distance_read.html?id=${index}">${post.title}</a></div>
-                    <div class="actions"><span class="delete_btn" onclick="deletePost(${index})">삭제</span></div>
+            posts.forEach(function (post, index) {
+                var listItem = document.createElement('li');
+                listItem.className = 'board_item';
+                listItem.innerHTML = `
+                    <a class="post_link" href="distance_read.html?id=${index}">${post.title}</a>
+                    <button onclick="deletePost(${index})">삭제</button>
                 `;
-                boardList.appendChild(postElement);
+                postList.appendChild(listItem);
             });
         }
 
-        // 함수: 게시물 삭제
         function deletePost(index) {
-            existingPosts.splice(index, 1);
-            localStorage.setItem("distancePosts", JSON.stringify(existingPosts));
-            renderPosts(); // 목록 재렌더링
+            var posts = JSON.parse(localStorage.getItem('distancePosts')) || [];
+            posts.splice(index, 1);
+            localStorage.setItem('distancePosts', JSON.stringify(posts));
+            renderPosts();
         }
-
-        // 초기 목록 렌더링
-        renderPosts();
     </script>
-
 </body>
 
 </html>
+

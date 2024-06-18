@@ -44,6 +44,10 @@
             color: #333;
         }
 
+        .board_view_wrap {
+            margin-top: 20px;
+        }
+
         .board_view {
             padding: 20px;
             margin-bottom: 20px;
@@ -56,19 +60,16 @@
             color: #333;
         }
 
-        .genre,
         .info {
             margin-bottom: 15px;
         }
 
-        .genre dt,
         .info dt {
             font-weight: bold;
             color: #555;
             margin-bottom: 5px;
         }
 
-        .genre dd,
         .info dd {
             margin-left: 0;
             color: #333;
@@ -117,17 +118,21 @@
         }
 
         .comment {
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 5px;
-        }
+    position: relative; /* Ensure comment container can position children absolutely */
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
 
         .comment strong {
             font-weight: bold;
         }
 
+
         #commentContent {
-            width: calc(100% - 20px);
+            width: 100%;
             padding: 10px;
             margin-bottom: 10px;
             border: 1px solid #ddd;
@@ -138,10 +143,10 @@
 
         #commentContent:focus {
             outline: none;
-            border-color: #800020;
         }
 
-        #commentForm button {
+
+        #commentForm button[type="submit"] {
             padding: 10px 20px;
             background-color: #800020;
             color: #fff;
@@ -152,9 +157,33 @@
             font-size: 1rem;
         }
 
-        #commentForm button:hover {
+        #commentForm button[type="submit"]:hover {
             background-color: #5c0019;
         }
+
+        #map {
+            height: 300px;
+            margin-bottom: 20px;
+        }
+
+        .delete-btn {
+    display: inline-block; /* Ensure button is displayed */
+    position: absolute; /* Position it within the comment element */
+    top: 5px; /* Adjust as needed */
+    right: 5px; /* Adjust as needed */
+    padding: 5px 10px;
+    background-color: #800020;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.delete-btn:hover {
+    background-color: #555;
+}
+
     </style>
 </head>
 
@@ -176,6 +205,13 @@
                 <div class="cont" id="viewContent">
                     글 내용이 들어갑니다.<br /> 글 내용이 들어갑니다.<br /> 글 내용이 들어갑니다.<br /> 글 내용이 들어갑니다.<br /> 글 내용이 들어갑니다.<br /> 글 내용이 들어갑니다.<br /> 글 내용이 들어갑니다.<br /> 글 내용이 들어갑니다.
                 </div>
+                <div id="map"></div>
+                <p>현재 위치</p>
+                <input type="hidden" id="latitude" name="latitude" value="">
+                <input type="hidden" id="longitude" name="longitude" value="">
+                <div class="bt_wrap">
+                    <a href="distance_list.html" class="on">목록</a>
+                </div>
             </div>
             <div class="comments_section">
                 <h2>댓글</h2>
@@ -185,12 +221,11 @@
                     <button type="submit">댓글 등록</button>
                 </form>
             </div>
-            <div class="bt_wrap">
-                <a href="distance_list.html" class="on">목록</a>
-            </div>
         </div>
     </div>
 
+    <script type="text/javascript"
+        src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=7827fc4bdc7eb1bba6281130a2a3a99f"></script>
     <script>
         // URL에서 매개변수 값을 가져오는 함수
         function getParameterByName(name) {
@@ -214,43 +249,117 @@
                 document.getElementById("viewTitle").textContent = selectedPost.title;
                 document.getElementById("viewWriter").textContent = selectedPost.writer;
                 document.getElementById("viewContent").innerHTML = selectedPost.content.replace(/\n/g, '<br>');
+                document.getElementById("latitude").value = selectedPost.latitude;
+                document.getElementById("longitude").value = selectedPost.longitude;
+
+                // 지도에 마커 표시
+                var mapContainer = document.getElementById('map');
+                var mapOption = {
+                    center: new kakao.maps.LatLng(selectedPost.latitude, selectedPost.longitude), // 글에서 저장한 위치로 지도의 중심 설정
+                    level: 3 // 지도의 확대 레벨
+                };
+                var map = new kakao.maps.Map(mapContainer, mapOption);
+
+                // 마커 표시
+                var markerPosition = new kakao.maps.LatLng(selectedPost.latitude, selectedPost.longitude);
+                var marker = new kakao.maps.Marker({
+                    position: markerPosition
+                });
+                marker.setMap(map);
             }
         }
 
-        // 댓글 관련 코드
-        var commentsKey = "distancePostComments_" + postId;
-        var comments = JSON.parse(localStorage.getItem(commentsKey)) || [];
+        // 댓글 관련 변수 및 함수
+    function getCommentsKey(postId) {
+        return "comments_" + postId; // postId에 해당하는 댓글 키
+    }
 
-        function displayComments() {
-            var commentsList = document.getElementById("commentsList");
-            commentsList.innerHTML = "";
-            comments.forEach(function (comment) {
-                var commentElement = document.createElement("div");
-                commentElement.classList.add("comment");
-                commentElement.innerHTML = `<strong>${comment.author}</strong>: ${comment.content}`;
+    function displayComments(postId) {
+        var commentsKey = getCommentsKey(postId);
+        var comments = JSON.parse(localStorage.getItem(commentsKey)) || [];
+        var commentsList = document.getElementById("commentsList");
+        commentsList.innerHTML = ""; // 댓글 리스트 초기화
+
+        comments.forEach(function (comment, index) {
+                var commentElement = createCommentElement(comment, index, postId);
                 commentsList.appendChild(commentElement);
             });
+        }
+
+        function createCommentElement(comment, index, postId) {
+            var commentElement = document.createElement("div");
+            commentElement.classList.add("comment");
+            commentElement.innerHTML = `
+                <strong>${comment.author}</strong>: ${comment.content}
+                <button class="delete-btn" data-comment-index="${index}" data-post-id="${postId}">삭제</button>
+            `;
+            if (comment.author === "cineBuddy") {
+                commentElement.querySelector("strong").style.cursor = "pointer";
+                commentElement.querySelector("strong").addEventListener("click", function () {
+                    window.location.href = "message.html"; // cineBuddy 클릭 시 특정 페이지로 이동
+                });
+            }
+            return commentElement;
+        }
+
+        function handleDeleteComment(event) {
+            var target = event.target;
+            if (target.classList.contains("delete-btn")) {
+                var postId = target.getAttribute("data-post-id");
+                var commentIndex = parseInt(target.getAttribute("data-comment-index"));
+
+                var commentsKey = getCommentsKey(postId);
+                var comments = JSON.parse(localStorage.getItem(commentsKey)) || [];
+
+                // 해당 인덱스의 댓글 삭제
+                comments.splice(commentIndex, 1);
+
+                // 변경된 댓글 리스트를 로컬 스토리지에 저장
+                localStorage.setItem(commentsKey, JSON.stringify(comments));
+
+                // 변경된 댓글 리스트를 화면에 다시 표시
+                displayComments(postId);
+            }
         }
 
         document.getElementById("commentForm").addEventListener("submit", function (event) {
             event.preventDefault();
             var commentContent = document.getElementById("commentContent").value.trim();
             if (commentContent !== "") {
+                var postId = getParameterByName("id");
+                var commentsKey = getCommentsKey(postId);
+                var comments = JSON.parse(localStorage.getItem(commentsKey)) || [];
+
                 var newComment = {
-                    author: "cineBuddy",
+                    author: "cineBuddy", // 댓글 작성자를 cineBuddy로 지정
                     content: commentContent
                 };
+
                 comments.push(newComment);
                 localStorage.setItem(commentsKey, JSON.stringify(comments));
-                displayComments();
+                displayComments(postId);
+
+                // 입력창 초기화
                 document.getElementById("commentContent").value = "";
             } else {
                 alert("댓글을 입력해주세요.");
             }
         });
 
-        displayComments();
+        // 삭제 버튼 클릭 이벤트 처리
+        document.addEventListener("click", function (event) {
+            handleDeleteComment(event);
+        });
+
+        // 페이지 로드 시 댓글 표시
+        document.addEventListener("DOMContentLoaded", function () {
+            var postId = getParameterByName("id");
+            displayComments(postId);
+        });
+
+
     </script>
 </body>
 
 </html>
+

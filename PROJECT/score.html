@@ -5,6 +5,108 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>cineBuddy 영화별점</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .board_wrap {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .board_title {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .board_title strong {
+            font-size: 2rem;
+            color: #800020;
+        }
+
+        .board_title p {
+            margin-top: 5px;
+            font-size: 1rem;
+        }
+
+        .bt_wrap {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .bt_wrap a {
+            display: inline-block;
+            min-width: 80px;
+            margin-left: 10px;
+            padding: 10px;
+            border: 1px solid black;
+            border-radius: 2px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            color: black;
+        }
+
+        .bt_wrap a:first-child {
+            margin-left: 0;
+        }
+
+        .bt_wrap a.on {
+            background: #800020;
+            color: white;
+        }
+
+        .bt_wrap a:hover {
+            background-color: #5c0019;
+        }
+
+        .board_list {
+            border-top: 2px solid #800020;
+        }
+
+        .list_header {
+            display: flex;
+            border-bottom: 1px solid #800020;
+            padding: 10px 0;
+        }
+
+        .list_header>div {
+            flex: 1;
+            text-align: center;
+        }
+
+        .post_item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .post_item .title {
+            flex: 1;
+            padding: 5px;
+        }
+
+        .post_item .star-rating {
+            display: flex;
+            align-items: center;
+        }
+
+        .post_item .star-rating span {
+            font-size: 1.5rem;
+            color: #000;
+            margin-right: 5px;
+        }
+    </style>
 </head>
 
 <body>
@@ -15,114 +117,51 @@
         </div>
         <div class="board_list_wrap">
             <div class="board_list">
-                
-                <div class="title">영화</div>
-                <div class="star">별점</div>
+                <div class="list_header">
+                    <div class="title">영화 제목</div>
+                    <div class="title">평점</div>
+                </div>
+                <!-- JavaScript로 게시물 목록 동적으로 추가 -->
             </div>
-
-            <!-- JavaScript로 게시물 목록 동적으로 추가 -->
-            <script>
-                // localStorage에서 저장된 게시물 목록을 가져옴
-                var existingPosts = JSON.parse(localStorage.getItem("posts")) || [];
-
-                // 게시물 목록을 동적으로 추가
-                for (var i = 0; i < existingPosts.length; i++) {
-                    var post = existingPosts[i];
-
-                    var postElement = document.createElement("div");
-                    postElement.innerHTML = `
-                    <div class="title"><a href="score.html?id=${post.id}">${post.title}</a></div>
-                    <div class="star">${post.writer}</div>`;
-
-                    document.querySelector(".board_list_wrap").appendChild(postElement);
-                }
-
-                // 게시물 삭제 함수
-                function deletePost(postId) {
-                    // 해당 ID의 게시물을 찾아서 삭제
-                     existingPosts = existingPosts.filter(function(post) {
-                        return post.id !== postId;
-                    });
-                    // localStorage에 업데이트된 목록 저장
-                    localStorage.setItem("posts", JSON.stringify(existingPosts));
-
-                    // 현재 페이지 리로드
-                    location.reload();
-                }
-
-            </script>
         </div>
         <div class="bt_wrap">
             <a href="score_register.html" class="on">별점 등록하러 가기</a>
-            <!--<a href="#">수정</a>-->
         </div>
     </div>
 
+    <script>
+        // localStorage에서 저장된 영화 평점 목록을 가져옴
+        var existingPosts = JSON.parse(localStorage.getItem("movie_ratings")) || [];
+
+        // 함수: 별점을 별 모양으로 변환하는 HTML 생성
+        function getStarRating(rating) {
+            var stars = '';
+            for (var i = 1; i <= 5; i++) {
+                if (i <= rating) {
+                    stars += '<span>&#9733;</span>'; // 별 모양
+                } else {
+                    stars += '<span>&#9734;</span>'; // 빈 별 모양
+                }
+            }
+            return stars;
+        }
+
+        // 게시물 목록을 동적으로 추가
+        var boardList = document.querySelector(".board_list");
+
+        existingPosts.forEach(function (post) {
+            var postElement = document.createElement("div");
+            postElement.classList.add("post_item");
+            postElement.innerHTML = `
+                <div class="title">${post.title}</div>
+                <div class="star-rating">
+                    ${getStarRating(post.rating)}
+                </div>
+            `;
+            boardList.appendChild(postElement);
+        });
+    </script>
 </body>
 
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-    }
-
-    html {
-        font-size: 25px;
-    }
-
-    a{
-        text-decoration: none;
-        color: black;
-    }
-
-    .board_wrap {
-        width: auto;
-        margin: auto;
-    }
-
-    .board_title {
-        margin-bottom: 30px;
-    }
-
-    .board_title strong {
-        font-size: 2rem;
-    }
-
-    .board_title p {
-        margin-top: 5px;
-        font-size: 1rem;
-    }
-    .bt_wrap {
-        margin-top: 30px;
-        text-align: center;
-        font-size: 0;
-    }
-
-    .bt_wrap a {
-        display: inline-block;
-        min-width: 80px;
-        margin-left: 10px;
-        padding: 10px;
-        border: 1px solid black;
-        border-radius: 2px;
-        font-size: 1rem;
-    }
-
-    .bt_wrap a:first-child {
-        margin-left: 0;
-    }
-
-    .bt_wrap a.on {
-        background: #800020;
-    }
-
-    .board_list {
-        border-top: 2px solid #800020;
-    }
-
-    .board_list>div:list-child {
-        border-bottom: 1px solid #800020;
-    }
-</style>
-
 </html>
+

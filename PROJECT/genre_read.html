@@ -117,17 +117,20 @@
         }
     
         .comment {
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 5px;
-        }
+    position: relative; /* Ensure comment container can position children absolutely */
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
     
         .comment strong {
             font-weight: bold;
         }
     
         #commentContent {
-            width: calc(100% - 20px);
+            width: 100%;
             padding: 10px;
             margin-bottom: 10px;
             border: 1px solid #ddd;
@@ -155,6 +158,24 @@
         #commentForm button:hover {
             background-color: #5c0019;
         }
+
+        .delete-btn {
+    display: inline-block; /* Ensure button is displayed */
+    position: absolute; /* Position it within the comment element */
+    top: 5px; /* Adjust as needed */
+    right: 5px; /* Adjust as needed */
+    padding: 5px 10px;
+    background-color: #800020;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.delete-btn:hover {
+    background-color: #555;
+}
     </style>
     
 </head>
@@ -227,24 +248,96 @@
             }
         }
 
+                // 댓글 관련 변수 및 함수
+    function getCommentsKey(postId) {
+        return "comments_" + postId; // postId에 해당하는 댓글 키
+    }
+
+    function displayComments(postId) {
+        var commentsKey = getCommentsKey(postId);
+        var comments = JSON.parse(localStorage.getItem(commentsKey)) || [];
+        var commentsList = document.getElementById("commentsList");
+        commentsList.innerHTML = ""; // 댓글 리스트 초기화
+
+        comments.forEach(function (comment, index) {
+                var commentElement = createCommentElement(comment, index, postId);
+                commentsList.appendChild(commentElement);
+            });
+        }
+
+        function createCommentElement(comment, index, postId) {
+            var commentElement = document.createElement("div");
+            commentElement.classList.add("comment");
+            commentElement.innerHTML = `
+                <strong>${comment.author}</strong>: ${comment.content}
+                <button class="delete-btn" data-comment-index="${index}" data-post-id="${postId}">삭제</button>
+            `;
+            if (comment.author === "cineBuddy") {
+                commentElement.querySelector("strong").style.cursor = "pointer";
+                commentElement.querySelector("strong").addEventListener("click", function () {
+                    window.location.href = "message.html"; // cineBuddy 클릭 시 특정 페이지로 이동
+                });
+            }
+            return commentElement;
+        }
+
+        function handleDeleteComment(event) {
+            var target = event.target;
+            if (target.classList.contains("delete-btn")) {
+                var postId = target.getAttribute("data-post-id");
+                var commentIndex = parseInt(target.getAttribute("data-comment-index"));
+
+                var commentsKey = getCommentsKey(postId);
+                var comments = JSON.parse(localStorage.getItem(commentsKey)) || [];
+
+                // 해당 인덱스의 댓글 삭제
+                comments.splice(commentIndex, 1);
+
+                // 변경된 댓글 리스트를 로컬 스토리지에 저장
+                localStorage.setItem(commentsKey, JSON.stringify(comments));
+
+                // 변경된 댓글 리스트를 화면에 다시 표시
+                displayComments(postId);
+            }
+        }
+
         document.getElementById("commentForm").addEventListener("submit", function (event) {
             event.preventDefault();
             var commentContent = document.getElementById("commentContent").value.trim();
             if (commentContent !== "") {
+                var postId = getParameterByName("id");
+                var commentsKey = getCommentsKey(postId);
+                var comments = JSON.parse(localStorage.getItem(commentsKey)) || [];
+
                 var newComment = {
-                    author: "cineBuddy",
+                    author: "cineBuddy", // 댓글 작성자를 cineBuddy로 지정
                     content: commentContent
                 };
+
                 comments.push(newComment);
                 localStorage.setItem(commentsKey, JSON.stringify(comments));
-                displayComments();
+                displayComments(postId);
+
+                // 입력창 초기화
                 document.getElementById("commentContent").value = "";
             } else {
                 alert("댓글을 입력해주세요.");
             }
         });
 
-        displayComments();
+        // 삭제 버튼 클릭 이벤트 처리
+        document.addEventListener("click", function (event) {
+            handleDeleteComment(event);
+        });
+
+        // 페이지 로드 시 댓글 표시
+        document.addEventListener("DOMContentLoaded", function () {
+            var postId = getParameterByName("id");
+            displayComments(postId);
+        });
+
+
+
     </script>
 </body>
 

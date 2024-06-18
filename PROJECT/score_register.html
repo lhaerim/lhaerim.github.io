@@ -1,208 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>cineBuddy 영화별점등록</title>
-</head>
-
-<body>
-    <div class="board_wrap">
-        <div class="board_title">
-            <strong>영화별점리뷰</strong>
-            <p>영화평점을 남길 땐 신중하게!</p>
-        </div>
-        <div class="board_write_wrap">
-            <div class="board_write">
-                <form id="postForm">
-                    <div class="genre">
-                        <dl>
-                            <dt>장르</dt>
-                            <dd>
-                                <input list="browsers" placeholder="장르 선택"/>
-                                <datalist id="browsers">
-                                    <option value="공포">
-                                    <option value="로맨스">
-                                    <option value="SF">
-                                    <option value="판타지">
-                                    <option value="액션">
-                                    <option value="애니메이션">
-                                </datalist>
-                            </dd>
-                        </dl>
-                    </div>
-                    <div class="title">
-                        <dl>
-                            <dt>글 제목</dt>
-                            <dd><input type="text" id="title" placeholder="제목 입력" required /></dd>
-                        </dl>
-                    </div>
-                    <div class="info">
-                        <dl>
-                            <dt>글쓴이</dt>
-                            <dd><input type="text" id="writer" placeholder="글쓴이 입력" required /></dd>
-                        </dl>
-                    </div>
-                    <div class="cont">
-                        <textarea id="content" placeholder="내용 입력" required></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="bt_wrap">
-                <a href="genre_list.html" class="on">글등록</a>
-                <!--<a href="#">수정</a>-->
-            </div>
-        </div>
-        <script>
-            function submitForm() {
-                var genre = document.getElementById("genre").value;
-                var title = document.getElementById("title").value;
-                var writer = document.getElementById("writer").value;
-                var content = document.getElementById("content").value;
-
-        
-                    // 기존에 저장된 글 목록을 불러와서 추가
-                    var existingPosts = JSON.parse(localStorage.getItem("posts")) || [];
-                    var newPost = {
-                        genre: genre,
-                        title: title,
-                        writer: writer,
-                        content: content
-                    };
-
-                    existingPosts.push(newPost);
-
-                    // localStorage에 저장
-                    localStorage.setItem("posts", JSON.stringify(existingPosts));
-
-                    // Redirect to the list page after submission
-                    window.location.href ="genre_list.html";
-                };
-        </script>
-    </div>
-</body>
-
-<style>
+    <title>cineBuddy 영화별점 등록</title>
+    <style>
         * {
-        margin: 0;
-        padding: 0;
-    }
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    html {
-        font-size: 25px;
-    }
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
-    a{
-        text-decoration: none;
-        color: black;
-    }
+        .form_wrap {
+            width: 80%;
+            max-width: 400px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
 
-    .board_wrap {
-        width: auto;
-        margin: auto;
-    }
+        .form_title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-    .board_title {
-        margin-bottom: 30px;
-    }
+        .form_title strong {
+            font-size: 1.5rem;
+            color: #800020;
+        }
 
-    .board_title strong {
-        font-size: 2rem;
-    }
+        .form_group {
+            margin-bottom: 15px;
+        }
 
-    .board_title p {
-        margin-top: 5px;
-        font-size: 1rem;
-    }
-    .bt_wrap {
-        margin-top: 30px;
-        text-align: center;
-        font-size: 0;
-    }
+        .form_group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
 
-    .bt_wrap a {
-        display: inline-block;
-        min-width: 80px;
-        margin-left: 10px;
-        padding: 10px;
-        border: 1px solid black;
-        border-radius: 2px;
-        font-size: 1rem;
-    }
+        .form_group input[type="text"],
+        .form_group input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
 
-    .bt_wrap a:first-child {
-        margin-left: 0;
-    }
+        .form_group input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            color: #fff;
+            background-color: #800020;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
 
-    .bt_wrap a.on {
-        background: #800020;
-    }
+        .form_group input[type="submit"]:hover {
+            background-color: #5c0019;
+        }
+    </style>
+</head>
+<body>
+    <div class="form_wrap">
+        <div class="form_title">
+            <strong>영화 별점 등록</strong>
+        </div>
+        <form id="ratingForm">
+            <div class="form_group">
+                <label for="movieTitle">영화 제목</label>
+                <input type="text" id="movieTitle" name="movieTitle" required>
+            </div>
+            <div class="form_group">
+                <label for="movieRating">별점 (1-5)</label>
+                <input type="number" id="movieRating" name="movieRating" min="1" max="5" required>
+            </div>
+            <div class="form_group">
+                <input type="submit" value="등록">
+            </div>
+        </form>
+    </div>
 
-    .board_list>div:list-child {
-        border-bottom: 1px solid #800020;
-    }
-    .board_write {
-        border-top: 2px solid #800020;
-    }
-    .board_write .genre, .board_write .title, .board_write .info {
-        padding: 15px;
-    }
+    <script>
+        var ratingForm = document.getElementById("ratingForm");
 
-    .board_write .title {
-        border-top: 1px dashed #ddd;
-    }
+        ratingForm.addEventListener("submit", function(event) {
+            event.preventDefault();
 
-    .board_write .info {
-        font-size: 0;
-    }
+            var movieTitle = document.getElementById("movieTitle").value.trim();
+            var movieRating = document.getElementById("movieRating").value.trim();
 
-    .board_write .genre dl {
-        font-size: 0;
-    }
+            if (movieTitle === "" || movieRating === "") {
+                alert("영화 제목과 별점을 모두 입력해주세요.");
+                return;
+            }
 
-    .board_write .title dl {
-        font-size: 0;
-    }
-    
-    .board_write .info dl {
-        display: inline-block;
-        width: 50%;
-        vertical-align: midlle;
-    }
+            // 별점은 숫자로 변환
+            movieRating = parseInt(movieRating);
 
-    .board_write .genre dt,
-    .board_write .genre dd,
-    .board_write .title dt, 
-    .board_write .title dd, 
-    .board_write .info dt,
-    .board_write .info dd {
-        display: inline-block;
-        vertical-align: middle;
-    }
+            if (isNaN(movieRating) || movieRating < 1 || movieRating > 5) {
+                alert("별점은 1에서 5 사이의 숫자여야 합니다.");
+                return;
+            }
 
-    .board_write .title dd {
-        width: calc(100% -100px);
-    }
+            // 새로운 별점 객체 생성
+            var newRating = {
+                title: movieTitle,
+                rating: movieRating
+            };
 
-    .board_write .genre input,
-    .board_write .title input[type="text"],
-    .board_write .info input[type="text"] {
-        padding: 10px;
-        box-sizing: border-box;
-    }
+            // localStorage에서 저장된 영화 평점 목록 가져오기
+            var existingRatings = JSON.parse(localStorage.getItem("movie_ratings")) || [];
 
-    .board_write .cont textarea {
-        display: block;
-        width: 100%;
-        height: 300px;
-        padding: 10px;
-        margin-left: 10px;
-        box-sizing: auto;
-        border: 2px solid #800020;
-        resize: vertical;
-    }
+            // 새로운 별점 추가
+            existingRatings.push(newRating);
 
-</style>
+            // localStorage에 업데이트된 목록 저장
+            localStorage.setItem("movie_ratings", JSON.stringify(existingRatings));
 
+            // 등록 폼 초기화
+            ratingForm.reset();
+
+            // score.html로 이동
+            window.location.href = "score.html";
+        });
+    </script>
+</body>
 </html>

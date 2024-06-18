@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>로그인</title>
 </head>
-
 <body>
     <form id="loginForm">
         <label for="username">이름:</label>
@@ -19,20 +17,20 @@
     </form>
 
     <script>
-        document.getElementById("loginForm").addEventListener("submit", function(event) {
-            event.preventDefault();
-            var username = document.getElementById("username").value;
-            var email = document.getElementById("email").value;
-            var password = document.getElementById("password").value;
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        var username = document.getElementById("username").value;
+        var email = document.getElementById("email").value;
 
-            // 로그인 처리 - 사용자 정보 설정
-            setCookie("user", JSON.stringify({ username: username, email: email }));
-            window.location.href = "mypage.html"; // 마이페이지로 리디렉션
-        });
+        // 로그인 처리 - 사용자 정보 설정 (비밀번호는 보안상 클라이언트에 저장하지 않음)
+        setCookie("user", JSON.stringify({ username: username, email: email }));
+        alert("로그인 되었습니다."); // 임시 확인용
+        window.location.href = "mypage.html"; // 마이페이지로 리디렉션
+    });
 
-        function setCookie(name, value) {
-            document.cookie = name + "=" + (value || "") + "; path=/";
-        }
+    function setCookie(name, value) {
+        document.cookie = name + "=" + (value || "") + "; path=/";
+    }
     </script>
 
     <style>
