@@ -146,20 +146,19 @@
             </div>
         </div>
         <div class="bt_wrap">
-            <a href="genre_write.html" class="on">글쓰기</a>
+            <a href="distance_write.html" class="on">글쓰기</a>
         </div>
     </div>
 
     <script>
-        // localStorage에서 저장된 게시물 목록을 가져옴
-        var existingPosts = JSON.parse(localStorage.getItem("posts")) || [];
+        // localStorage에서 저장된 거리 게시물 목록을 가져옴
+        var existingPosts = JSON.parse(localStorage.getItem("distancePosts")) || [];
 
         // 함수: 게시물 목록을 렌더링
         function renderPosts() {
             var boardList = document.querySelector(".board_list");
             var listHeader = `
                 <div class="list_header">
-                    <div class="genre">장르</div>
                     <div class="writer">글쓴이</div>
                     <div class="title">제목</div>
                     <div class="actions">삭제</div>
@@ -171,9 +170,8 @@
                 var postElement = document.createElement("div");
                 postElement.classList.add("post_item");
                 postElement.innerHTML = `
-                    <div class="genre">${post.genre}</div>
                     <div class="writer">${post.writer}</div>
-                    <div class="title"><a href="genre_read.html?id=${index}">${post.title}</a></div>
+                    <div class="title"><a href="distance_read.html?id=${index}">${post.title}</a></div>
                     <div class="actions"><span class="delete_btn" onclick="deletePost(${index})">삭제</span></div>
                 `;
                 boardList.appendChild(postElement);
@@ -183,7 +181,7 @@
         // 함수: 게시물 삭제
         function deletePost(index) {
             existingPosts.splice(index, 1);
-            localStorage.setItem("posts", JSON.stringify(existingPosts));
+            localStorage.setItem("distancePosts", JSON.stringify(existingPosts));
             renderPosts(); // 목록 재렌더링
         }
 
