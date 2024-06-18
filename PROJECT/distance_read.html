@@ -5,10 +5,240 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>cineBuddy 거리 글보기</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+    
+        html {
+            font-size: 16px;
+        }
+    
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+    
+        .board_wrap {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+            border-radius: 8px;
+        }
+    
+        .board_title {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    
+        .board_title strong {
+            font-size: 2rem;
+            color: #800020;
+        }
+    
+        .board_title p {
+            margin-top: 5px;
+            font-size: 1rem;
+            color: #333;
+        }
+    
+        .board_view {
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+    
+        .title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+    
+        .genre,
+        .info {
+            margin-bottom: 15px;
+        }
+    
+        .genre dt,
+        .info dt {
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 5px;
+        }
+    
+        .genre dd,
+        .info dd {
+            margin-left: 0;
+            color: #333;
+        }
+    
+        .cont {
+            color: #333;
+            margin-bottom: 20px;
+        }
+    
+        .bt_wrap {
+            text-align: center;
+            margin-top: 20px;
+        }
+    
+        .bt_wrap a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #800020;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+    
+        .bt_wrap a:hover {
+            background-color: #5c0019;
+        }
+    
+        .comments_section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    
+        .comments_section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+    
+        #commentsList {
+            margin-top: 10px;
+        }
+    
+        .comment {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    
+        .comment strong {
+            font-weight: bold;
+        }
+    
+        #commentContent {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            resize: vertical;
+        }
+    
+        #commentContent:focus {
+            outline: none;
+            border-color: #800020;
+        }
+    
+        #commentForm button {
+            padding: 10px 20px;
+            background-color: #800020;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 1rem;
+        }
+    
+        #commentForm button:hover {
+            background-color: #5c0019;
+        }
+    </style>
+    
 </head>
 
 <body>
+    <div class="board_wrap">
+        <div class="board_title">
+            <strong>거리별 게시판</strong>
+            <p>자신과 가까운 cineBuddy들을 탐색해보세요!</p>
+        </div>
+        <div class="board_view_wrap">
+            <div class="board_view">
+                <div class="title" id="viewTitle">글 제목이 들어갑니다</div>
+                <div class="info">
+                    <dl>
+                        <dt>글쓴이</dt>
+                        <dd id="viewWriter">이해림</dd>
+                    </dl>
+                </div>
+                <div class="cont" id="viewContent">
+                    글 내용이 들어갑니다.<br /> 글 내용이 들어갑니다.<br /> 글 내용이 들어갑니다.<br /> 글 내용이 들어갑니다.<br /> 글 내용이 들어갑니다.<br /> 글 내용이 들어갑니다.<br /> 글 내용이 들어갑니다.<br /> 글 내용이 들어갑니다.
+                </div>
+            </div>
 
+            <div class="comments_section">
+                <h2>댓글</h2>
+                <div id="commentsList"></div>
+                <form id="commentForm">
+                    <textarea id="commentContent" rows="4" placeholder="댓글을 입력하세요..."></textarea><br>
+                    <button type="submit">댓글 등록</button>
+                </form>
+            </div>
+
+            <div class="bt_wrap">
+                <a href="distance_list.html" class="on">목록</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // URL에서 매개변수 값을 가져오는 함수
+        function getParameterByName(name) {
+            var url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return "";
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+
+        // view.html이 열릴 때 해당 글의 ID를 가져와서 localStorage에서 해당 글을 찾아 표시
+        var postId = getParameterByName("id");
+        var posts = JSON.parse(localStorage.getItem("posts")) || [];
+
+        if (postId !== null) {
+            var selectedPost = posts[postId];
+
+            if (selectedPost) {
+                document.getElementById("viewTitle").textContent = selectedPost.title;
+                document.getElementById("viewWriter").textContent = selectedPost.writer;
+                document.getElementById("viewContent").innerHTML = selectedPost.content.replace(/\n/g, '<br>');
+            }
+        }
+
+        document.getElementById("commentForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+            var commentContent = document.getElementById("commentContent").value.trim();
+            if (commentContent !== "") {
+                var newComment = {
+                    author: "cineBuddy",
+                    content: commentContent
+                };
+                comments.push(newComment);
+                localStorage.setItem(commentsKey, JSON.stringify(comments));
+                displayComments();
+                document.getElementById("commentContent").value = "";
+            } else {
+                alert("댓글을 입력해주세요.");
+            }
+        });
+
+        displayComments();
+    </script>
 </body>
 
 </html>

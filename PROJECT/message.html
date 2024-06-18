@@ -1,14 +1,128 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>cineBuddy 메시지</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .message-container {
+            width: 60%;
+            border: 2px solid #005f8d;
+            border-radius: 10px;
+            padding: 20px;
+            background-color: #e0f7ff;
+        }
+
+        .message-header {
+            background-color: #005f8d;
+            color: white;
+            padding: 10px;
+            border-radius: 10px 10px 0 0;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+
+        .message-body {
+            padding: 10px;
+            background-color: white;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .message-body h2 {
+            margin: 0 0 10px 0;
+        }
+
+        .message-body .chat {
+            border: 1px solid #005f8d;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .message-body .chat p {
+            margin: 0;
+            padding: 5px;
+        }
+
+        .message-body .chat p.me {
+            text-align: right;
+            background-color: #e0f7ff;
+            border-radius: 10px;
+            padding: 10px;
+            display: inline-block;
+        }
+
+        .message-body .chat p.you {
+            text-align: left;
+            background-color: #c5e1f5;
+            border-radius: 10px;
+            padding: 10px;
+            display: inline-block;
+        }
+
+        .message-body input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #005f8d;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .message-body button {
+            width: 100%;
+            padding: 10px;
+            background-color: #005f8d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .message-body button:hover {
+            background-color: #00456a;
+        }
+    </style>
 </head>
 
 <body>
+    <div class="message-container">
+        <div class="message-header">
+            메시지 창
+        </div>
+        <div class="message-body">
+            <h2>상대방과 자유로운 이야기를 나눠보세요</h2>
+            <div class="chat">
+            </div>
+            <input type="text" id="message" placeholder="메시지를 입력하세요...">
+            <button id="sendMessage">보내기</button>
+        </div>
+    </div>
 
+    <script>
+        document.getElementById("sendMessage").addEventListener("click", function () {
+            var messageContent = document.getElementById("message").value.trim();
+            if (messageContent !== "") {
+                var chatContainer = document.querySelector(".chat");
+                var newMessage = document.createElement("p");
+                newMessage.classList.add("me");
+                newMessage.textContent = "나: " + messageContent;
+                chatContainer.appendChild(newMessage);
+                document.getElementById("message").value = "";
+            }
+        });
+    </script>
 </body>
 
 </html>

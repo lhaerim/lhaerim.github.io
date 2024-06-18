@@ -4,7 +4,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>cineBuddy 장르 목록</title>
+    <title>cineBuddy 거리 목록</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        a {
+            text-decoration: none;
+            color: black;
+        }
+
+        .board_wrap {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .board_title {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .board_title strong {
+            font-size: 2rem;
+            color: #800020;
+        }
+
+        .board_title p {
+            margin-top: 5px;
+            font-size: 1rem;
+        }
+
+        .bt_wrap {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .bt_wrap a {
+            display: inline-block;
+            min-width: 80px;
+            margin-left: 10px;
+            padding: 10px;
+            border: 1px solid black;
+            border-radius: 2px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .bt_wrap a:first-child {
+            margin-left: 0;
+        }
+
+        .bt_wrap a.on {
+            background: #800020;
+            color: white;
+        }
+
+        .board_list {
+            border-top: 2px solid #800020;
+        }
+
+        .list_header,
+        .post_item {
+            display: flex;
+            border-bottom: 1px solid #800020;
+            padding: 10px 0;
+        }
+
+        .list_header>div,
+        .post_item>div {
+            flex: 1;
+            text-align: center;
+        }
+
+        .post_item .title a {
+            color: #000;
+        }
+
+        .post_item .title a:hover {
+            text-decoration: underline;
+        }
+
+        .bt_wrap a:hover {
+            background-color: #5c0019;
+        }
+
+        .bt_wrap a {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #800020;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .post_item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .post_item .genre,
+        .post_item .writer,
+        .post_item .title {
+            flex: 1;
+            padding: 5px;
+        }
+
+        .post_item .delete_btn {
+            cursor: pointer;
+            color: red;
+        }
+    </style>
 </head>
 
 <body>
@@ -15,113 +137,60 @@
         </div>
         <div class="board_list_wrap">
             <div class="board_list">
-                <div class="writer">글쓴이</div>
-                <div class="title">제목</div>
+                <div class="list_header">
+                    <div class="writer">글쓴이</div>
+                    <div class="title">제목</div>
+                    <div class="actions">삭제</div>
+                </div>
+                <!-- 게시물 목록이 여기에 추가됩니다 -->
             </div>
-
-            <!-- JavaScript로 게시물 목록 동적으로 추가 -->
-            <script>
-                // localStorage에서 저장된 게시물 목록을 가져옴
-                var existingPosts = JSON.parse(localStorage.getItem("posts")) || [];
-
-                // 게시물 목록을 동적으로 추가
-                for (var i = 0; i < existingPosts.length; i++) {
-                    var post = existingPosts[i];
-
-                    var postElement = document.createElement("div");
-                    postElement.innerHTML = `
-                    <div class="title"><a href="view.html?id=${post.id}">${post.title}</a></div>
-                    <div class="writer">${post.writer}</div>`;
-
-                    document.querySelector(".board_list_wrap").appendChild(postElement);
-                }
-
-                // 게시물 삭제 함수
-                function deletePost(postId) {
-                    // 해당 ID의 게시물을 찾아서 삭제
-                    existingPosts = existingPosts.filter(function(post) {
-                        return post.id !== postId;
-                    });
-
-                    // localStorage에 업데이트된 목록 저장
-                    localStorage.setItem("posts", JSON.stringify(existingPosts));
-
-                    // 현재 페이지 리로드
-                    location.reload();
-                }
-            </script>
         </div>
         <div class="bt_wrap">
-            <a href="distance_write.html" class="on">글쓰기</a>
-            <!--<a href="#">수정</a>-->
+            <a href="genre_write.html" class="on">글쓰기</a>
         </div>
     </div>
 
+    <script>
+        // localStorage에서 저장된 게시물 목록을 가져옴
+        var existingPosts = JSON.parse(localStorage.getItem("posts")) || [];
+
+        // 함수: 게시물 목록을 렌더링
+        function renderPosts() {
+            var boardList = document.querySelector(".board_list");
+            var listHeader = `
+                <div class="list_header">
+                    <div class="genre">장르</div>
+                    <div class="writer">글쓴이</div>
+                    <div class="title">제목</div>
+                    <div class="actions">삭제</div>
+                </div>
+            `;
+            boardList.innerHTML = listHeader; // 기존 목록 초기화 및 헤더 유지
+
+            existingPosts.forEach(function (post, index) {
+                var postElement = document.createElement("div");
+                postElement.classList.add("post_item");
+                postElement.innerHTML = `
+                    <div class="genre">${post.genre}</div>
+                    <div class="writer">${post.writer}</div>
+                    <div class="title"><a href="genre_read.html?id=${index}">${post.title}</a></div>
+                    <div class="actions"><span class="delete_btn" onclick="deletePost(${index})">삭제</span></div>
+                `;
+                boardList.appendChild(postElement);
+            });
+        }
+
+        // 함수: 게시물 삭제
+        function deletePost(index) {
+            existingPosts.splice(index, 1);
+            localStorage.setItem("posts", JSON.stringify(existingPosts));
+            renderPosts(); // 목록 재렌더링
+        }
+
+        // 초기 목록 렌더링
+        renderPosts();
+    </script>
+
 </body>
-
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-    }
-
-    html {
-        font-size: 25px;
-    }
-
-    a{
-        text-decoration: none;
-        color: black;
-    }
-
-    .board_wrap {
-        width: auto;
-        margin: auto;
-    }
-
-    .board_title {
-        margin-bottom: 30px;
-    }
-
-    .board_title strong {
-        font-size: 2rem;
-    }
-
-    .board_title p {
-        margin-top: 5px;
-        font-size: 1rem;
-    }
-    .bt_wrap {
-        margin-top: 30px;
-        text-align: center;
-        font-size: 0;
-    }
-
-    .bt_wrap a {
-        display: inline-block;
-        min-width: 80px;
-        margin-left: 10px;
-        padding: 10px;
-        border: 1px solid black;
-        border-radius: 2px;
-        font-size: 1rem;
-    }
-
-    .bt_wrap a:first-child {
-        margin-left: 0;
-    }
-
-    .bt_wrap a.on {
-        background: #800020;
-    }
-
-    .board_list {
-        border-top: 2px solid #800020;
-    }
-
-    .board_list>div:list-child {
-        border-bottom: 1px solid #800020;
-    }
-</style>
 
 </html>

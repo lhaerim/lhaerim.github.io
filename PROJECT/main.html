@@ -10,97 +10,167 @@
 <body>
     <header>
         <h1>cineBuddy</h1>
-        <nav><span>로그인</span> <span>회원가입</span></nav>
+        <nav>
+            <span id="login">로그인</span>
+            <span id="mypage">마이페이지</span>
+        </nav>
     </header>
     <div class="container">
         <div class="box">
-            <a href="genre_list.html">
-            </a>
-            <span>장르별 취향맞는 cineBuddy 찾기</span>
+            <a href="genre_list.html">장르별 취향맞는 cineBuddy 찾기</a>
         </div>
         <div class="box">
-            <a href="distance_list.html">
-            </a>
-            <span>거리별 가까운 cineBuddy 찾기</span>
+            <a href="distance_list.html">거리별 가까운 cineBuddy 찾기</a>
         </div>
         <div class="box">
-            <a href="score.html">
-            </a>
-            <span>영화 별점</span>
+            <a href="score.html">영화 별점</a>
         </div>
     </div>
     <footer>
         개발일자 2024-06-00 <a href="introduce.html">개발인 이해림</a>
     </footer>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var user = getCookie("user");
+            var loginLink = document.getElementById("login");
+            var mypageLink = document.getElementById("mypage");
+
+            loginLink.onclick = function () {
+                window.location.href = "login.html";
+            };
+
+            mypageLink.onclick = function () {
+                if (user) {
+                    window.location.href = "mypage.html";
+                } else {
+                    alert("로그인이 필요합니다.");
+                }
+            };
+        });
+
+        function getCookie(name) {
+            var cookieArr = document.cookie.split(";");
+            for (var i = 0; i < cookieArr.length; i++) {
+                var cookiePair = cookieArr[i].split("=");
+                if (name.trim() === cookiePair[0].trim()) {
+                    return decodeURIComponent(cookiePair[1]);
+                }
+            }
+            return null;
+        }
+    </script>
+
     <style>
-
         html {
-        font-size: 25px;
-        }
+    font-size: 16px;
+    box-sizing: border-box;
+}
 
-        header {
-            background-color: #800020;
-        }
+*, *::before, *::after {
+    box-sizing: inherit;
+    margin: 0;
+    padding: 0;
+}
 
-        header h1 {
-        font-size: 3rem;
-        }
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.5;
+    background-color: #f4f4f4;
+    color: #333;
+}
 
-        header nav {
-        margin-top: 5px;
-        font-size: 1rem;
-        }
-        
-        div section article {
-            display: flex;
-        }
-        
-        #board {
-            align-items: stretch;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fx));
-            grid-gap: 1rem;
-        }
-        
-        .container {
-            display: flex;
-            width: 100%;
-            padding: 4% 2%;
-            box-sizing: border-box;
-            height: 100vh;
-        }
-        
-        .box {
-            background-color: #800020;
-            flex: 1;
-            overflow: hidden;
-            transition: 5s;
-            margin: 0 2%;
-            box-shadow: 10px 10px 10px black;
-            line-height: 0;
-        }
-        
-        .box>a {
-            font-size: 70px;
-            display: block;
-            text-align: center;
-            height: 100vh;
-            line-height: 2.6;
-            display: flex;
-            width: 100%;
-            padding: 4% 2%;
-            box-sizing: border-box;
-        }
-        
-        .box>span {
-            font-size: 70px;
-            display: block;
-            text-align: center;
-            height: 10vh;
-            line-height: 2.6;
-            color: black;
-        }
+header {
+    background-color: #800020;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    text-align: center;
+    color: white;
+}
+
+header h1 {
+    font-size: 2rem;
+}
+
+header nav {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+}
+
+nav span {
+            margin-left: 10px;
+            cursor: pointer;
+}
+header nav span {
+    margin: 0 1rem;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 2rem;
+}
+
+.box {
+    background-color: #800020;
+    color: white;
+    flex: 1;
+    overflow: hidden;
+    margin: 1rem 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    transition: transform 0.3s;
+    text-align: center;
+}
+
+.box a {
+    font-size: 1.5rem;
+    display: block;
+    text-align: center;
+    padding: 2rem;
+    color: white;
+    text-decoration: none;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.box:hover {
+    transform: scale(1.05);
+}
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    background-color: #800020;
+    color: white;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+footer a {
+    color: white;
+    text-decoration: underline;
+}
+
+@media (min-width: 768px) {
+    .container {
+        flex-direction: row;
+    }
+
+    .box {
+        margin: 0 1rem;
+    }
+}
+
     </style>
 
 

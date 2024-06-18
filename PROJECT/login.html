@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인</title>
+</head>
+
+<body>
+    <h1>로그인</h1>
+    <form id="loginForm">
+        <label for="username">이름:</label>
+        <input type="text" id="username" name="username" required><br>
+        <label for="email">이메일:</label>
+        <input type="email" id="email" name="email" required><br>
+        <label for="password">비밀번호:</label>
+        <input type="password" id="password" name="password" required><br>
+        <button type="submit">로그인</button>
+    </form>
+
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            var username = document.getElementById("username").value;
+            var email = document.getElementById("email").value;
+            var password = document.getElementById("password").value;
+
+            // 로그인 처리 - 사용자 정보 설정
+            setCookie("user", JSON.stringify({ username: username, email: email }));
+            window.location.href = "mypage.html"; // 마이페이지로 리디렉션
+        });
+
+        function setCookie(name, value) {
+            document.cookie = name + "=" + (value || "") + "; path=/";
+        }
+    </script>
+
+    <style>
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+header {
+    background-color: #800020;
+    box-shadow: 10px 10px 10px black;
+    padding: 10px 0;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 3rem;
+    color: white;
+    margin: 0;
+}
+
+header nav {
+    margin-top: 5px;
+    font-size: 1rem;
+}
+
+header nav span {
+    margin: 0 10px;
+    cursor: pointer;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    padding: 4% 2%;
+    box-sizing: border-box;
+}
+
+.box {
+    background-color: #800020;
+    flex: 1;
+    overflow: hidden;
+    transition: 0.5s;
+    margin: 0 2%;
+    box-shadow: 10px 10px 10px black;
+    line-height: 0;
+    text-align: center;
+    color: white;
+    font-size: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30vh;
+}
+
+.box a, .box span {
+    display: block;
+    width: 100%;
+    padding: 4% 2%;
+    box-sizing: border-box;
+    color: white;
+    font-size: 1.5rem;
+    text-decoration: none;
+}
+
+footer {
+    text-align: center;
+    padding: 10px 0;
+    background-color: #800020;
+    color: white;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+    margin: 20px auto;
+}
+
+form h1 {
+    margin-bottom: 20px;
+    font-size: 2rem;
+    text-align: center;
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #800020;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+form button:hover {
+    background-color: #a0002b;
+}
+
+.board_wrap {
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+}
+
+.board_title {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.board_title strong {
+    font-size: 2rem;
+}
+
+.board_title p {
+    margin-top: 5px;
+    font-size: 1rem;
+}
+
+.bt_wrap {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.bt_wrap a {
+    display: inline-block;
+    min-width: 80px;
+    margin-left: 10px;
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 2px;
+    font-size: 1rem;
+    cursor: pointer;
+    background: #800020;
+    color: white;
+}
+
+.bt_wrap a:first-child {
+    margin-left: 0;
+}
+
+.bt_wrap a.on {
+    background: #a0002b;
+}
+
+.board_list {
+    border-top: 2px solid #800020;
+}
+
+.list_header, .post_item {
+    display: flex;
+    border-bottom: 1px solid #800020;
+    padding: 10px 0;
+}
+
+.list_header > div, .post_item > div {
+    flex: 1;
+    text-align: center;
+}
+
+.post_item .title a {
+    color: #000;
+}
+
+.post_item .title a:hover {
+    text-decoration: underline;
+}
+
+    </style>
+</body>
+
+</html>
