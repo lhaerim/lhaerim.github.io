@@ -5,10 +5,90 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>cineBuddy 관리자 및 개발자 소개</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 800px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .profile-picture {
+            width: 150px;
+            height: 150px;
+            background-color: #800020;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px auto;
+        }
+
+        .profile-picture img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .role {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .links {
+            margin: 20px 0;
+        }
+
+        .links a {
+            display: inline-block;
+            margin: 10px 0;
+            color: #800020;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        .description {
+            background-color: #800020;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 1.2rem;
+        }
+    </style>
 </head>
 
 <body>
-
+    <div class="container">
+        <div class="profile-picture">
+            <img src="profile.jpeg" alt="Profile Picture">
+        </div>
+        <div class="role">개발자 및 관리자</div>
+        <div class="links">
+            <a href="https://github.com/lhaerim">&#128279;GihHub</a><br>
+            <a href="https://www.linkedin.com/in/hammmm/">&#128279;LinkedIn</a>
+        </div>
+        <div class="description">안녕하세요 23학번 컴퓨터과학 전공 이해림입니다.<br> 이번 '웹시스템설계' 과목을 통해 'cineBuddy'라는 Web을 개발하게 되었습니다. <br> cineBuddy란 영화(cinema) + 친구(Buddy)의 합성어로 같이 영화볼 친구를 찾을 수 있게 서비스를 제공하는 Web입니다. 해당 Web의 서비스를 잘 즐겨주시고 피드백은 언제나 <br>환영입니다! 모두 행복하세요!</div>
+    </div>
 </body>
 
 </html>
